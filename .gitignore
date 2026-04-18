@@ -1,0 +1,11 @@
+node_modules/
+dist/
+identity/dist/
+*.log
+.env
+.env.local
+.DS_Store
+
+# Wrangler
+.wrangler/
+.wrangler-test/

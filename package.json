@@ -1,0 +1,57 @@
+{
+  "name": "@chittyos/REPLACE-ME",
+  "version": "0.1.0",
+  "description": "REPLACE-ME — describe what this service does",
+  "main": "identity/dist/index.js",
+  "types": "identity/dist/index.d.ts",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch identity/src/index.ts",
+    "dev:api": "wrangler dev connectivity/api/index.ts",
+    "build": "tsc && tsc-alias",
+    "build:api": "tsc && tsc-alias",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint identity/src --ext .ts",
+    "format": "prettier --write \"identity/src/**/*.ts\"",
+    "validate:fractal": "npx --yes @chittyos/schema validate-fractal .",
+    "certify": "npx --yes @chittyos/schema certify .",
+    "deploy": "wrangler deploy",
+    "deploy:staging": "wrangler deploy --env staging",
+    "deploy:production": "wrangler deploy --env production",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "chittyos"
+  ],
+  "author": "Chitty Foundation",
+  "license": "MIT",
+  "dependencies": {
+    "hono": "^4.0.0",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.5",
+    "@typescript-eslint/eslint-plugin": "^6.19.0",
+    "@typescript-eslint/parser": "^6.19.0",
+    "eslint": "^8.56.0",
+    "eslint-config-prettier": "^9.1.2",
+    "prettier": "^3.2.4",
+    "tsc-alias": "^1.8.8",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3",
+    "vitest": "^1.2.1",
+    "wrangler": "^3.30.0"
+  },
+  "files": [
+    "identity/dist",
+    "scope.json",
+    "CHARTER.md",
+    "CHITTY.md",
+    "README.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  }
+}
