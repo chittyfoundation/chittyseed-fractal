@@ -3,10 +3,12 @@
     "target": "ES2022",
     "module": "ESNext",
     "lib": ["ES2022"],
-    "moduleResolution": "node",
+    "types": ["@cloudflare/workers-types", "@types/node"],
+    "moduleResolution": "Bundler",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "strict": true,
+    "noUncheckedIndexedAccess": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
@@ -14,12 +16,17 @@
     "declarationMap": true,
     "sourceMap": true,
     "outDir": "./identity/dist",
-    "rootDir": "./identity/src",
+    "rootDir": ".",
     "baseUrl": ".",
     "paths": {
-      "@/*": ["identity/src/*"]
+      "@/*": ["identity/src/*"],
+      "@integrations/*": ["connectivity/integrations/*"]
     }
   },
-  "include": ["identity/src/**/*"],
+  "include": [
+    "identity/src/**/*",
+    "connectivity/api/**/*",
+    "connectivity/integrations/**/*"
+  ],
   "exclude": ["node_modules", "identity/dist", "**/*.test.ts"]
 }

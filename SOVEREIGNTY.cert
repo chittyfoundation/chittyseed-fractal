@@ -1,0 +1,205 @@
+{
+  "$schema": "https://schema.chitty.cc/meta/sovereignty-cert.schema.json",
+  "_comment": "Sovereignty Affirmation certificate. Populated and signed by `npm run bootstrap` via cert.chitty.cc/api/v1/issue. The signed cert binds the service's sovereignty CONDITIONAL on contract adherence: the cert only remains active while every contract in `required_contracts` exists, validates, and is being followed. ChittyCertify periodically re-verifies and revokes if any condition fails.",
+
+  "chittyid": "REPLACE-ME",
+  "certificate_type": "SOVEREIGNTY_AFFIRMATION",
+  "trust_score": 0,
+
+  "entity_data": {
+    "legal_name": "REPLACE-ME",
+    "canonical_uri": "chittycanon://core/services/REPLACE-ME",
+    "tier": 5,
+    "owner_org": "CHITTYFOUNDATION",
+    "scope_type": "service",
+    "domain": "REPLACE-ME.chitty.cc",
+    "repository": "chittyfoundation/REPLACE-ME",
+    "capability_group": null,
+    "execution_class": null
+  },
+
+  "_doctrine_comment": "Sovereignty is not absolute. It is granted within the boundary of contracts the service explicitly accepts. ChittyCertify is the authority that verifies adherence; cert auto-revokes if a required contract is removed, modified without re-affirmation, or violated at runtime.",
+
+  "required_contracts": [
+    {
+      "canonical_uri": "chittycanon://docs/tech/policy/sensitive-intent-contract-v1",
+      "local_path": "authority/contracts/SECRETS_CONTRACT.md",
+      "local_uri": "chittycanon://docs/tech/policy/REPLACE-ME-secrets-contract",
+      "purpose": "No secrets in chat. Credentials via ChittyConnect only.",
+      "required": true,
+      "last_verified_hash": null,
+      "last_verified_at": null
+    },
+    {
+      "canonical_uri": "chittycanon://docs/tech/policy/chittyos-auth-contract-v1",
+      "local_path": "authority/contracts/AUTH_CONTRACT.md",
+      "local_uri": "chittycanon://docs/tech/policy/REPLACE-ME-auth-contract",
+      "purpose": "Service-to-service uses bindings. End-user uses Ch1tty device-code.",
+      "required": true,
+      "last_verified_hash": null,
+      "last_verified_at": null
+    },
+    {
+      "canonical_uri": "chittycanon://gov/governance#core-types",
+      "local_path": null,
+      "purpose": "P/L/T/E/A entity ontology. Claude contexts are P, never T.",
+      "required": true,
+      "last_verified_hash": null,
+      "last_verified_at": null
+    },
+    {
+      "canonical_uri": "chittycanon://core/services/chittyschema#meta/fractal-layout",
+      "local_path": "scope.json",
+      "purpose": "Fractal trinity (identity/authority/connectivity) layout.",
+      "required": true,
+      "last_verified_hash": null,
+      "last_verified_at": null
+    }
+  ],
+
+  "sovereignty_claims": {
+    "operational_authority": "self-determined within tier",
+    "data_ownership": "service owns data declared in CHITTY.md data plane",
+    "credential_boundary": "all secrets routed through ChittyConnect; no plaintext local storage",
+    "non_repudiation": "service emits signed beacon to chittybeacon on every deploy; tail to chittytrack",
+    "binding_authority": "service-to-service calls via wrangler bindings; no service tokens"
+  },
+
+  "revocation_conditions": [
+    {
+      "code": "CONTRACT_MISSING",
+      "description": "A required contract document (CHARTER, CHITTY, CLAUDE, SECURITY, AGENTS, AUTH_CONTRACT, SECRETS_CONTRACT) was deleted from the repo",
+      "severity": "immediate",
+      "detected_by": "chittycertify periodic scan"
+    },
+    {
+      "code": "CONTRACT_DRIFT",
+      "description": "A required contract's hash changed without ChittyCertify re-affirmation",
+      "severity": "immediate",
+      "detected_by": "hash check on contract files"
+    },
+    {
+      "code": "ONTOLOGY_VIOLATION",
+      "description": "Service emitted entity records violating P/L/T/E/A rules (e.g., Claude context classified as T)",
+      "severity": "immediate",
+      "detected_by": "hook-validate-entity-types + runtime canon checks"
+    },
+    {
+      "code": "TOKEN_LEAK",
+      "description": "Service detected to embed plaintext credential in source, logs, or response body",
+      "severity": "immediate",
+      "detected_by": "chittytrack tail consumer + hook-block-credential-leakage"
+    },
+    {
+      "code": "BINDING_BYPASS",
+      "description": "Service made service-to-service call via bearer token instead of declared binding",
+      "severity": "warning → immediate after grace period",
+      "detected_by": "wrangler config audit + runtime"
+    },
+    {
+      "code": "TRUST_FLOOR_BREACH",
+      "description": "ChittyTrust score fell below tier minimum",
+      "severity": "graduated (warning → suspension → revocation)",
+      "detected_by": "chittytrust scoring"
+    },
+    {
+      "code": "BEACON_SILENCE",
+      "description": "Service stopped emitting deploy/health beacons for > 7 days without explicit decommission",
+      "severity": "warning → suspension",
+      "detected_by": "chittybeacon staleness monitor"
+    },
+    {
+      "code": "DEPENDENCY_REVOCATION",
+      "description": "An upstream service this one depends on had its sovereignty cert revoked",
+      "severity": "cascade-warning",
+      "detected_by": "chittycertify dependency graph traversal"
+    }
+  ],
+
+  "recertification_triggers": [
+    "Required contract file modified (any change to AUTH_CONTRACT.md, SECRETS_CONTRACT.md, SECURITY.md, AGENTS.md)",
+    "scope.json integrations block changed",
+    "wrangler.jsonc services[] bindings added/removed",
+    "tier change",
+    "owner_org change",
+    "capability_group or execution_class change",
+    "Cert expiration (default: 90 days; signed in `expires_at`)"
+  ],
+
+  "verification_report": {
+    "status": "self-declared",
+    "verifier": "self",
+    "verification_date": null,
+    "evidence": [
+      {
+        "type": "fractal_layout",
+        "source": "scope.json",
+        "verifier": "chittyschema",
+        "result": null,
+        "last_check": null
+      },
+      {
+        "type": "charter_present",
+        "source": "CHARTER.md",
+        "verifier": "chittycanon",
+        "result": null,
+        "last_check": null
+      },
+      {
+        "type": "security_policy_present",
+        "source": "SECURITY.md",
+        "verifier": "chittycertify",
+        "result": null,
+        "last_check": null
+      },
+      {
+        "type": "agents_manifest_present",
+        "source": "AGENTS.md",
+        "verifier": "chittyagent-orchestrator",
+        "result": null,
+        "last_check": null
+      },
+      {
+        "type": "auth_contract_present",
+        "source": "authority/contracts/AUTH_CONTRACT.md",
+        "verifier": "chittycertify",
+        "result": null,
+        "last_check": null
+      },
+      {
+        "type": "secrets_contract_present",
+        "source": "authority/contracts/SECRETS_CONTRACT.md",
+        "verifier": "chittycertify",
+        "result": null,
+        "last_check": null
+      },
+      {
+        "type": "bindings_declared",
+        "source": "wrangler.jsonc",
+        "verifier": "chittycertify",
+        "result": null,
+        "last_check": null
+      }
+    ]
+  },
+
+  "audit_log_uri": "chittycanon://core/services/chittytrack#service/REPLACE-ME/sovereignty",
+
+  "issued_at": null,
+  "issued_by": null,
+  "expires_at": null,
+  "signature": null,
+  "signature_algorithm": null,
+  "issuer_uri": "chittycanon://core/services/chittycert",
+
+  "_bootstrap_instructions": [
+    "1. Fill in entity_data.legal_name and entity_data.canonical_uri from CHARTER.md",
+    "2. Resolve all REPLACE-ME tokens in required_contracts[*].local_uri",
+    "3. Run: npm run bootstrap",
+    "4. Bootstrap script resolves entity_data.chittyid via auth.chitty.cc",
+    "5. Bootstrap hashes each required_contracts[*].local_path and fills last_verified_hash + last_verified_at",
+    "6. Bootstrap POSTs the populated cert to cert.chitty.cc/api/v1/issue",
+    "7. Signed cert (with issued_at, issued_by, signature, expires_at) is committed back here",
+    "8. ChittyCertify periodically (every 24h) re-verifies hashes + runtime evidence and revokes if any revocation_condition fires"
+  ]
+}
