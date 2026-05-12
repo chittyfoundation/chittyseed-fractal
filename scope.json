@@ -9,6 +9,13 @@
   "tier": 5,
   "name": "REPLACE-ME",
   "description": "Replace this with a one-line description of what this service does.",
+
+  "capability_router": {
+    "capability_group": "REPLACE-ME",
+    "execution_class": "REPLACE-ME",
+    "_comment": "JTBD group ∈ {build,ship,govern,legal,connect,workspace,local-lab,agent-runtime,market,internal}; execution_class ∈ {@chitty/ambient,@chitty/workspace,@chitty/connectors,@chitty/reasoning}. See chittycanon://docs/ops/architecture/chittymarket-capability-router."
+  },
+
   "trinity": {
     "identity": {
       "src": "identity/src",
@@ -21,6 +28,9 @@
       "charter": "CHARTER.md",
       "chitty": "CHITTY.md",
       "claude": "CLAUDE.md",
+      "security": "SECURITY.md",
+      "agents": "AGENTS.md",
+      "sovereignty": "SOVEREIGNTY.cert",
       "canon": "authority/canon",
       "certifications": "authority/certifications",
       "owners": "authority/owners"
@@ -35,10 +45,69 @@
       "upstreams": "connectivity/upstreams"
     }
   },
+
   "inherits": {
     "identity": false,
     "authority": false,
     "connectivity": false
   },
+
+  "integrations": {
+    "schema": {
+      "endpoint": "https://schema.chitty.cc",
+      "meta_schemas": [
+        "https://schema.chitty.cc/meta/fractal-layout.schema.json",
+        "https://schema.chitty.cc/meta/repo-scope.schema.json"
+      ],
+      "validate_on": ["bootstrap", "pre-commit", "ci"]
+    },
+    "canon": {
+      "endpoint": "https://canon.chitty.cc",
+      "register_uris": ["CHARTER", "CHITTY", "SECURITY", "AGENTS"],
+      "validate_on": ["bootstrap", "pre-commit"]
+    },
+    "auth": {
+      "endpoint": "https://auth.chitty.cc",
+      "jwks": "https://auth.chitty.cc/.well-known/jwks.json",
+      "service_token_env": "CHITTY_AUTH_SERVICE_TOKEN"
+    },
+    "cert": {
+      "endpoint": "https://cert.chitty.cc",
+      "issue_path": "/api/v1/issue",
+      "sovereignty_cert": "SOVEREIGNTY.cert"
+    },
+    "register": {
+      "endpoint": "https://register.chitty.cc",
+      "scope_path": "/api/v1/scopes",
+      "onboarding_portal": "https://get.chitty.cc"
+    },
+    "marketplace": {
+      "enabled": false,
+      "_comment": "Set to true if this service exposes a Capability. Bootstrap will register capabilities.generated.json with ChittyMarket.",
+      "repo": "chittyfoundation/chittymarket",
+      "manifest_path": "capabilities.generated.json"
+    },
+    "ch1tty": {
+      "enabled": false,
+      "_comment": "Set to true if this service exposes an MCP backend. Bootstrap will register the worker URL with Ch1tty so all channels inherit it.",
+      "endpoint": "https://ch1tty.com",
+      "backend_register_path": "/api/v1/backends"
+    },
+    "agent_sdk": {
+      "package": "@chittyos/agent-sdk",
+      "_comment": "Service-local agent toolkit. Required when identity/agents/ is non-empty."
+    },
+    "observability": {
+      "tail_consumer": "chittytrack",
+      "deploy_beacon": "chittybeacon",
+      "beacon_endpoint": "https://chittybeacon.chitty.cc/api/v1/beacon"
+    },
+    "orchestrator": {
+      "endpoint": "https://agent.chitty.cc/mcp",
+      "register_agents_path": "/api/v1/agents/register",
+      "register_on": "bootstrap"
+    }
+  },
+
   "registered_with": []
 }

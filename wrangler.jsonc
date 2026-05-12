@@ -2,10 +2,14 @@
 //
 // Delete this file if your service does not deploy to Cloudflare Workers.
 // Update `name`, `account_id`, and `routes` for your service.
+//
+// IMPORTANT: Service-to-service auth is binding-based (see services[] below).
+// NO service tokens. NO Authorization headers between ChittyOS services.
+// See SECURITY.md and authority/contracts/AUTH_CONTRACT.md.
 {
   "name": "REPLACE-ME",
   "main": "connectivity/api/index.ts",
-  "compatibility_date": "2026-04-01",
+  "compatibility_date": "2026-05-12",
   "compatibility_flags": [
     "nodejs_compat"
   ],
@@ -17,18 +21,61 @@
     }
   ],
   "vars": {
-    "ENVIRONMENT": "production",
+    "CHITTY_ENVIRONMENT": "production",
     "SERVICE_NAME": "REPLACE-ME"
   },
-  "tail_consumers": [
-    {
-      "service": "chittytrack"
-    }
+
+  // ChittyOS service bindings — REQUIRED for any service that touches the ecosystem.
+  // The binding configuration IS the trust boundary; no tokens cross between services.
+  "services": [
+    { "binding": "CHITTYCANON",    "service": "chittycanon" },
+    { "binding": "CHITTYAUTH",     "service": "chittyauth" },
+    { "binding": "CHITTYCERT",     "service": "chittycert" },
+    { "binding": "CHITTYREGISTER", "service": "chittyregister" },
+    { "binding": "CHITTYCONNECT",  "service": "chittyconnect" },
+    { "binding": "CHITTYSCHEMA",   "service": "chittyschema" },
+    { "binding": "CHITTYTRUST",    "service": "chittytrust" }
+    // Optional bindings — uncomment if applicable:
+    // { "binding": "CH1TTY",                   "service": "ch1tty" },
+    // { "binding": "CHITTYMARKET",             "service": "chittymarket" },
+    // { "binding": "CHITTYAGENT_ORCHESTRATOR", "service": "chittyagent-orchestrator" },
+    // { "binding": "CHITTYBEACON",             "service": "chittybeacon" }
   ],
+
+  "tail_consumers": [
+    { "service": "chittytrack" }
+  ],
+
   "build": {
     "command": "npm run build:api"
   },
+
   "observability": {
     "enabled": true
+  },
+
+  // Per-env overrides — package.json deploy:staging / deploy:production
+  // resolve these via wrangler deploy --env <name>
+  "env": {
+    "staging": {
+      "name": "REPLACE-ME-staging",
+      "routes": [
+        { "pattern": "staging-REPLACE-ME.chitty.cc/*", "zone_name": "chitty.cc" }
+      ],
+      "vars": {
+        "CHITTY_ENVIRONMENT": "staging",
+        "SERVICE_NAME": "REPLACE-ME-staging"
+      }
+    },
+    "production": {
+      "name": "REPLACE-ME",
+      "routes": [
+        { "pattern": "REPLACE-ME.chitty.cc/*", "zone_name": "chitty.cc" }
+      ],
+      "vars": {
+        "CHITTY_ENVIRONMENT": "production",
+        "SERVICE_NAME": "REPLACE-ME"
+      }
+    }
   }
 }

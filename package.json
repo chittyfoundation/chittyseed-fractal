@@ -5,6 +5,9 @@
   "main": "identity/dist/index.js",
   "types": "identity/dist/index.d.ts",
   "type": "module",
+  "engines": {
+    "node": ">=20.11.0"
+  },
   "scripts": {
     "dev": "tsx watch identity/src/index.ts",
     "dev:api": "wrangler dev connectivity/api/index.ts",
@@ -12,42 +15,59 @@
     "build:api": "tsc && tsc-alias",
     "test": "vitest run",
     "test:watch": "vitest",
-    "lint": "eslint identity/src --ext .ts",
-    "format": "prettier --write \"identity/src/**/*.ts\"",
+    "lint": "eslint identity/src connectivity --ext .ts",
+    "format": "prettier --write \"{identity,connectivity}/**/*.ts\"",
+    "typecheck": "tsc --noEmit",
     "validate:fractal": "npx --yes @chittyos/schema validate-fractal .",
+    "validate:contracts": "node identity/scripts/validate-contracts.mjs",
     "certify": "npx --yes @chittyos/schema certify .",
+    "bootstrap": "bash identity/scripts/bootstrap.sh",
+    "bootstrap:dry": "bash identity/scripts/bootstrap.sh --dry",
+    "bootstrap:ci": "bash identity/scripts/bootstrap.sh --ci",
+    "register": "bash identity/scripts/bootstrap.sh",
     "deploy": "wrangler deploy",
     "deploy:staging": "wrangler deploy --env staging",
     "deploy:production": "wrangler deploy --env production",
     "prepublishOnly": "npm run build"
   },
   "keywords": [
-    "chittyos"
+    "chittyos",
+    "chitty",
+    "fractal-trinity"
   ],
   "author": "Chitty Foundation",
   "license": "MIT",
   "dependencies": {
-    "hono": "^4.0.0",
-    "zod": "^3.22.4"
+    "hono": "^4.6.0",
+    "jose": "^5.9.0",
+    "zod": "^4.0.0"
   },
   "devDependencies": {
-    "@types/node": "^20.11.5",
-    "@typescript-eslint/eslint-plugin": "^6.19.0",
-    "@typescript-eslint/parser": "^6.19.0",
-    "eslint": "^8.56.0",
-    "eslint-config-prettier": "^9.1.2",
-    "prettier": "^3.2.4",
-    "tsc-alias": "^1.8.8",
-    "tsx": "^4.7.0",
-    "typescript": "^5.3.3",
-    "vitest": "^1.2.1",
-    "wrangler": "^3.30.0"
+    "@chittyos/agent-sdk": "^0.1.0",
+    "@chittyos/schema": "^0.1.0",
+    "@cloudflare/workers-types": "^4.20240925.0",
+    "@types/node": "^20.16.0",
+    "@typescript-eslint/eslint-plugin": "^8.0.0",
+    "@typescript-eslint/parser": "^8.0.0",
+    "eslint": "^9.10.0",
+    "eslint-config-prettier": "^9.1.0",
+    "prettier": "^3.3.0",
+    "tsc-alias": "^1.8.10",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0",
+    "vitest": "^2.1.0",
+    "wrangler": "^3.78.0"
   },
   "files": [
     "identity/dist",
     "scope.json",
     "CHARTER.md",
     "CHITTY.md",
+    "CLAUDE.md",
+    "SECURITY.md",
+    "AGENTS.md",
+    "SOVEREIGNTY.cert",
+    "authority/contracts",
     "README.md",
     "LICENSE"
   ],
